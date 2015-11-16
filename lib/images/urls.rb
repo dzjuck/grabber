@@ -9,7 +9,7 @@ module Images
     end
 
     def urls
-      tags.map { |img| @url_maker.make(img['src']) }
+      tags.map { |img| @url_maker.make(img['src']) }.uniq
     end
 
   private

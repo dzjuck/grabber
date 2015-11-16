@@ -52,10 +52,18 @@ RSpec.describe Images::Urls do
       allow(images_urls).to receive(:tags) { tags }
     end
 
+    def stub_tags_map
+      allow(images_urls).to(
+        receive_message_chain(:tags, :map) { tags }
+      )
+    end
+
     it 'should load images tags' do
       stub_url_maker
 
       expect(html_doc).to receive(:css).with('img') { tags }
+      
+      images_urls.urls
     end
 
     it 'should make url for each image tag' do
@@ -64,10 +72,22 @@ RSpec.describe Images::Urls do
       tags.each do |tag|
         expect(url_maker).to receive(:make).with(tag['src'])
       end
-    end
 
-    after(:each) do 
       images_urls.urls
     end
+
+    context 'when urls repeating' do
+      let(:tag_1) { double('img tag 1', :[] => 'src 1') }
+      let(:tag_2) { double('img tag 2', :[] => 'src 2') }
+      let(:tags) { [tag_1, tag_2, tag_1] }
+
+      it 'should return only unique urls' do
+        stub_tags_map
+
+        res = images_urls.urls
+        expect(res).to match_array([tag_1, tag_2])
+      end
+    end
+
   end
 end
