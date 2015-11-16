@@ -7,6 +7,7 @@ module Images
     end
 
     def load
+      puts "Скачиваю изображение - #{@url}"
       open(@url).read
     end
   end
