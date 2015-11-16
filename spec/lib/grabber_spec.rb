@@ -70,6 +70,26 @@ RSpec.describe Grabber do
         expect(images_loader_obj).to receive(:load)
       end
     end
+    
+    it 'should load images in separate threads' do
+      stub_check_save_dir
+      stub_images_urls
+      allow(Images::Saver).to receive_message_chain(:new, :save)
+      
+      expect(Thread).to receive(:new).exactly(images_urls.length).times
+    end
+
+    it 'should wait all threads to load images' do
+      stub_check_save_dir
+      stub_images_urls
+
+      images_urls.map do |image_url|
+        thread = double('Thread')
+        allow(grabber).to receive(:save_image).with(image_url) { thread }
+
+        expect(thread).to receive(:join)
+      end
+    end
 
     it 'should save images' do
       stub_check_save_dir
@@ -84,6 +104,7 @@ RSpec.describe Grabber do
         expect(images_saver_obj).to receive(:save)
       end
     end
+
 
     it 'should check save dir existance' do
       stub_process_images

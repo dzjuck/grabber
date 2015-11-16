@@ -20,13 +20,18 @@ private
 
   def process_images
     puts "Найдено картинок - #{images_urls.length}"
+    threads = []
     images_urls.each do |image_url|
-      save_image(image_url)
+      threads << save_image(image_url)
     end
+
+    threads.each(&:join)
   end
 
   def save_image(image_url)
-    Images::Saver.new(@save_dir, image_url, load_image(image_url)).save
+    Thread.new do
+      Images::Saver.new(@save_dir, image_url, load_image(image_url)).save
+    end
   end
 
   def prepare_url(url)
