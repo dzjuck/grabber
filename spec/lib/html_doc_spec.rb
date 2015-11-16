@@ -25,9 +25,9 @@ RSpec.describe HtmlDoc do
     it 'should load html' do
       stub_nokogiri
 
-      temp_file_obj = double('Tempfile')
-      expect(html_doc).to receive(:open).with(url) { temp_file_obj }
-      expect(temp_file_obj).to receive(:read)
+      expect(html_doc).to(
+        receive_message_chain(:open, :read).with(url).with(no_args)
+      )
     end
 
     it 'should parse html' do

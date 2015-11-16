@@ -1,6 +1,6 @@
-require 'images_loader'
+require 'images/loader'
 
-RSpec.describe ImagesLoader do
+RSpec.describe Images::Loader do
   let(:url) { 'http://guides.rubyonrails.org/v4.1/images/getting_started/rails_welcome.png' }
   let!(:images_loader) { described_class.new(url) }
   
@@ -19,9 +19,9 @@ RSpec.describe ImagesLoader do
     it 'should load image' do
       stub_nokogiri
 
-      temp_file_obj = double('Tempfile')
-      expect(images_loader).to receive(:open).with(url) { temp_file_obj }
-      expect(temp_file_obj).to receive(:read)
+      expect(images_loader).to(
+        receive_message_chain(:open, :read).with(url).with(no_args)
+      )
     end
 
     after(:each) do

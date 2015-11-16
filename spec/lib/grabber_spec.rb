@@ -39,23 +39,20 @@ RSpec.describe Grabber do
     it 'should get images urls' do
       stub_save_image
 
-      images_urls_obj = double('ImagesUrls')
-      expect(ImagesUrls).to receive(:new).with(url) { images_urls_obj }
-      expect(images_urls_obj).to receive(:urls) { images_urls }
+      expect(Images::Urls).to(
+        receive_message_chain(:new, :urls)
+          .with(url)
+          .with(no_args) { images_urls }
+      )
     end
 
     it 'should load images' do
       stub_images_urls
-      allow(ImagesSaver).to receive_message_chain(:new, :save)
+      allow(Images::Saver).to receive_message_chain(:new, :save)
 
-      images_loader_objs = []
       images_urls.each do |url|
         images_loader_obj = double('ImagesLoader')
-        expect(ImagesLoader).to receive(:new).with(url) { images_loader_obj }
-        images_loader_objs << images_loader_obj
-      end
-
-      images_loader_objs.each do |images_loader_obj|
+        expect(Images::Loader).to receive(:new).with(url) { images_loader_obj }
         expect(images_loader_obj).to receive(:load)
       end
     end
@@ -64,17 +61,11 @@ RSpec.describe Grabber do
       stub_images_urls
       stub_load_image
 
-      images_saver_objs = []
       images_urls.each do |url|
         images_saver_obj = double('ImagesSaver')
-        expect(ImagesSaver).to(
+        expect(Images::Saver).to(
           receive(:new).with(save_dir, url, image) { images_saver_obj }
         )
-
-        images_saver_objs << images_saver_obj
-      end
-
-      images_saver_objs.each do |images_saver_obj|
         expect(images_saver_obj).to receive(:save)
       end
     end

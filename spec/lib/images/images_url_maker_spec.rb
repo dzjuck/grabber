@@ -1,6 +1,6 @@
-require 'images_url_maker'
+require 'images/url_maker'
 
-RSpec.describe ImagesUrlMaker do
+RSpec.describe Images::UrlMaker do
   let(:url) { 'http://guides.rubyonrails.org/v4.1/getting_started.html' }
   let(:base_url) { 'http://guides.rubyonrails.org/' }
   let!(:images_url_maker) { described_class.new(url) }

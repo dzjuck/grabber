@@ -1,6 +1,6 @@
-require 'images_urls'
+require 'images/urls'
 
-RSpec.describe ImagesUrls do
+RSpec.describe Images::Urls do
   let(:url) { 'http://guides.rubyonrails.org/v4.1/getting_started.html' }
 
   describe '#initialize' do
@@ -9,21 +9,21 @@ RSpec.describe ImagesUrls do
     end
 
     def stub_images_url_maker
-      allow(ImagesUrlMaker).to receive(:new)
+      allow(Images::UrlMaker).to receive(:new)
     end
 
     it 'should load html doc' do
       stub_images_url_maker
 
-      html_doc_obj = double('HtmlDoc')
-      expect(HtmlDoc).to receive(:new).with(url) { html_doc_obj }
-      expect(html_doc_obj).to receive(:doc)
+      expect(HtmlDoc).to(
+        receive_message_chain(:new, :doc).with(url).with(no_args)
+      )
     end
 
     it 'should init url maker' do
       stub_html_doc
 
-      expect(ImagesUrlMaker).to receive(:new).with(url)
+      expect(Images::UrlMaker).to receive(:new).with(url)
     end
 
     after(:each) do
@@ -40,7 +40,7 @@ RSpec.describe ImagesUrls do
     }
     let!(:images_urls) do 
       allow(HtmlDoc).to receive_message_chain(:new, :doc) { html_doc }
-      allow(ImagesUrlMaker).to receive(:new) { url_maker }
+      allow(Images::UrlMaker).to receive(:new) { url_maker }
       described_class.new(url) 
     end
 

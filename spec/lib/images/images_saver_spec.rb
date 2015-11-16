@@ -1,6 +1,6 @@
-require 'images_saver'
+require 'images/saver'
 
-RSpec.describe ImagesSaver do
+RSpec.describe Images::Saver do
   let(:save_dir) { '/tmp' }
   let(:image_url) { 'http://guides.rubyonrails.org/v4.1/images/getting_started/rails_welcome.png' }
   let(:image) { 'image data' }
