@@ -1,4 +1,4 @@
-RSpec.shared_examples "failed script" do |url, save_dir|
+RSpec.shared_examples 'failed script' do |url, save_dir|
   let(:command) { "./grab.rb #{url} #{save_dir}" }
   let(:result_files) { Dir.entries(save_dir) }
   let(:should_be_files) { ['.', '..'] }
